@@ -79,13 +79,13 @@ in {
         User = "CTO";
         Group = "CTO";
         Type = "oneshot";
-        ExecStart = "${CTO}/bin/CTO --calendar ${cfg.calendarURL} --user ${cfg.username} --password-file ${cfg.passwordFile} --day-delta ${cfg.dayDelta}";
+        ExecStart = "${CTO}/bin/CTO --calendar ${cfg.calendarURL} --user ${cfg.username} --password-file ${cfg.passwordFile} --day-delta ${builtins.toString cfg.dayDelta}";
       };
     };
     systemd.timers.CTO = {
       wantedBy = ["timers.target"];
       timerConfig = {
-        OnCalendar = "*-*-* ${cfg.time.hour}:${cfg.time.minute}:00";
+        OnCalendar = "*-*-* ${builtins.toString cfg.time.hour}:${builtins.toString cfg.time.minute}:00";
         Persistent = "True";
         Unit = "CTO.service";
       };
