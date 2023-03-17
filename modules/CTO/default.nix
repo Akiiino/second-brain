@@ -11,7 +11,7 @@ flake: {
 in {
   options.services.secondbrain.CTO = {
     enable = mkEnableOption ''
-      Calendar Task Organizer: an tool for creating reocurring tasks automatically, based on calendar entries.
+      Calendar Task Organizer: a tool for creating reocurring tasks automatically, based on calendar entries.
     '';
 
     calendarURL = mkOption {
@@ -35,11 +35,11 @@ in {
       '';
     };
 
-    dayDelta = mkOption {
+    dayLookahead = mkOption {
       type = types.int;
       default = 1;
       description = ''
-        How many days ahead to make tasks.
+        How many days ahead to make tasks for.
       '';
     };
 
@@ -47,14 +47,14 @@ in {
       hour = mkOption {
         type = types.int;
         description = ''
-          Time when the calendar processing happens.
+          Hour when the calendar processing happens.
         '';
         default = 3;
       };
       minute = mkOption {
         type = types.int;
         description = ''
-          Time when the calendar processing happens.
+          Minute when the calendar processing happens.
         '';
         default = 0;
       };
@@ -79,7 +79,12 @@ in {
         User = "CTO";
         Group = "CTO";
         Type = "oneshot";
-        ExecStart = "${CTO}/bin/CTO --calendar ${cfg.calendarURL} --user ${cfg.username} --password-file ${cfg.passwordFile} --day-delta ${builtins.toString cfg.dayDelta}";
+        ExecStart =
+          "${CTO}/bin/CTO "
+          + "--calendar ${cfg.calendarURL} "
+          + "--user ${cfg.username} "
+          + "--password-file ${cfg.passwordFile} "
+          + "--day-lookahead ${builtins.toString cfg.dayLookahead}";
       };
     };
     systemd.timers.CTO = {
