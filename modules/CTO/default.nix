@@ -34,6 +34,23 @@ in {
         File containing the password used for accesing the CalDAV server.
       '';
     };
+
+    time = {
+      hour = mkOption {
+        type = types.str;
+        description = ''
+          Time when the calendar processing happens.
+        '';
+        default = "03";
+      };
+      minute = mkOption {
+        type = types.str;
+        description = ''
+          Time when the calendar processing happens.
+        '';
+        default = "00";
+      };
+    };
   };
   config = lib.mkIf cfg.enable {
     users.users.CTO = {
@@ -60,7 +77,7 @@ in {
     systemd.timers.CTO = {
       wantedBy = ["timers.target"];
       timerConfig = {
-        OnCalendar = "*-*-* 17:00:00";
+        OnCalendar = "*-*-* ${cfg.time.hour}:${cfg.time.minute}:00";
         Persistent = "True";
         Unit = "CTO.service";
       };
