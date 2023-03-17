@@ -35,20 +35,28 @@ in {
       '';
     };
 
+    dayDelta = mkOption {
+      type = types.int;
+      default = 1;
+      description = ''
+        How many days ahead to make tasks.
+      '';
+    };
+
     time = {
       hour = mkOption {
-        type = types.str;
+        type = types.int;
         description = ''
           Time when the calendar processing happens.
         '';
-        default = "03";
+        default = 3;
       };
       minute = mkOption {
-        type = types.str;
+        type = types.int;
         description = ''
           Time when the calendar processing happens.
         '';
-        default = "00";
+        default = 0;
       };
     };
   };
@@ -71,7 +79,7 @@ in {
         User = "CTO";
         Group = "CTO";
         Type = "oneshot";
-        ExecStart = "${CTO}/bin/CTO --calendar ${cfg.calendarURL} --user ${cfg.username} --password-file ${cfg.passwordFile} --day-delta 3";
+        ExecStart = "${CTO}/bin/CTO --calendar ${cfg.calendarURL} --user ${cfg.username} --password-file ${cfg.passwordFile} --day-delta ${cfg.dayDelta}";
       };
     };
     systemd.timers.CTO = {
