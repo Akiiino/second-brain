@@ -13,6 +13,14 @@ def make_todos(date, dry_run):
         expand=True,
         sort_keys=["dtstart"],
     )
+    todos = cal.search(
+        start=date,
+        end=date + datetime.timedelta(days=1),
+        todo=True,
+        expand=True,
+        sort_keys=["dtstart"],
+    )
+    existing_todos = {todo.icalendar_component["summary"] for todo in todos}
 
     for event in events:
         event = event.icalendar_component
@@ -24,6 +32,11 @@ def make_todos(date, dry_run):
 
             task = line.removeprefix("[!] ")
             time = event["dtstart"].dt.astimezone(tz=pytz.timezone("CET"))
+
+            if task in existing_todos:
+                print(f'Task "{task}" already exists for this day')
+                continue
+
             print(f'Creating task "{task}" on {time}')
 
             if dry_run:
