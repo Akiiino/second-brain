@@ -24,10 +24,11 @@ def make_todos(calendar, date, dry_run):
 
     for event in events:
         event = event.icalendar_component
-        time = event["dtstart"].dt.astimezone(tz=pytz.timezone("CET"))
 
-        if "description" not in event:
+        if "description" not in event or "dtstart" not in event:
             continue
+
+        time = event["dtstart"].dt.astimezone(tz=pytz.timezone("CET"))
 
         for i, line in enumerate(event["description"].split("\n")):
             if not line.startswith("[!] "):
@@ -61,7 +62,10 @@ def make_todos(calendar, date, dry_run):
 
 parser = argparse.ArgumentParser(
     prog="Calendar Task Organizer",
-    description="A tool for creating reocurring tasks automatically, based on calendar entries.",
+    description=(
+        "A tool for creating reocurring tasks automatically, "
+        "based on calendar entries."
+    ),
 )
 
 parser.add_argument("-c", "--calendar", required=True)
