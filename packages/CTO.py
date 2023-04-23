@@ -2,6 +2,7 @@ import datetime
 import caldav
 import icalendar
 import pytz
+import time
 import argparse
 
 
@@ -79,14 +80,20 @@ args = parser.parse_args()
 with open(args.password_file, "r") as password_file:
     password = password_file.read().strip()
 
-calendar = caldav.DAVClient(
-    url=args.calendar,
-    username=args.username,
-    password=password,
-).calendar(url=args.calendar)
+for _ in range(10):
+    try:
+        calendar = caldav.DAVClient(
+            url=args.calendar,
+            username=args.username,
+            password=password,
+        ).calendar(url=args.calendar)
 
-make_todos(
-    calendar,
-    datetime.date.today() + datetime.timedelta(days=args.day_lookahead),
-    dry_run=args.dry_run,
-)
+        make_todos(
+            calendar,
+            datetime.date.today()+datetime.timedelta(days=args.day_lookahead),
+            dry_run=args.dry_run,
+        )
+        break
+    except Exception:
+        print("Waiting for the server...")
+        time.sleep(10)
