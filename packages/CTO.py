@@ -61,6 +61,26 @@ def make_todos(calendar, date, dry_run):
             todo.save()
 
 
+def cleanup_todos(calendar, date, dry_run):
+    todos = calendar.search(
+        start=date-datetime.timedelta(weeks=52),
+        end=date,
+        todo=True,
+        expand=True,
+        sort_keys=["dtstart"],
+    )
+
+    for todo in todos:
+        if "dtstart" not in todo.icalendar_component:
+            continue
+
+        task = todo.icalendar_component["summary"]
+        print(f'Removing task "{task}"')
+
+        if not dry_run:
+            todo.delete()
+
+
 parser = argparse.ArgumentParser(
     prog="Calendar Task Organizer",
     description=(
@@ -91,6 +111,12 @@ for _ in range(10):
         make_todos(
             calendar,
             datetime.date.today()+datetime.timedelta(days=args.day_lookahead),
+            dry_run=args.dry_run,
+        )
+
+        cleanup_todos(
+            calendar,
+            datetime.date.today()-datetime.timedelta(days=1),
             dry_run=args.dry_run,
         )
         break
