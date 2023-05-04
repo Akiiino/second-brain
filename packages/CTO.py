@@ -38,7 +38,7 @@ def make_todos(calendar, date, dry_run):
             task = line.removeprefix("[!] ")
 
             if task in existing_todos:
-                print(f'Task "{task}" already exists for this day')
+                print(f'Task "{task}" already exists for this day ({time})')
                 continue
 
             print(f'Creating task "{task}" at {time}')
