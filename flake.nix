@@ -26,7 +26,7 @@
         formatter = pkgs.alejandra;
         devShells.default = import "${self}/devshell.nix" {inherit self pkgs inputs;};
 
-        packages.CTO = pkgs.writers.writePython3Bin "CTO" {libraries = [pkgs.python310Packages.caldav];} (builtins.readFile "${self}/packages/CTO.py");
+        packages.CTO = pkgs.writers.writePython3Bin "CTO" {libraries = [pkgs.python3Packages.caldav];} (builtins.readFile "${self}/packages/CTO.py");
         packages.default = self'.packages.CTO;
       };
       flake = {
