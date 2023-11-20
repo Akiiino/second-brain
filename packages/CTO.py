@@ -63,7 +63,7 @@ def make_todos(calendar, date, dry_run):
 
 def cleanup_todos(calendar, date, dry_run):
     todos = calendar.search(
-        start=date-datetime.timedelta(weeks=52),
+        start=date - datetime.timedelta(weeks=52),
         end=date,
         todo=True,
         expand=True,
@@ -110,13 +110,14 @@ for _ in range(10):
 
         make_todos(
             calendar,
-            datetime.date.today()+datetime.timedelta(days=args.day_lookahead),
+            datetime.date.today()
+            + datetime.timedelta(days=args.day_lookahead),
             dry_run=args.dry_run,
         )
 
         cleanup_todos(
             calendar,
-            datetime.date.today()-datetime.timedelta(days=1),
+            datetime.date.today() - datetime.timedelta(days=1),
             dry_run=args.dry_run,
         )
         break

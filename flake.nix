@@ -26,11 +26,20 @@
         formatter = pkgs.alejandra;
         devShells.default = import "${self}/devshell.nix" {inherit self pkgs inputs;};
 
-        packages.CTO = pkgs.writers.writePython3Bin "CTO" {libraries = [pkgs.python3Packages.caldav];} (builtins.readFile "${self}/packages/CTO.py");
-        packages.default = self'.packages.CTO;
+        packages = {
+            CTO = pkgs.writers.writePython3Bin "CTO" {
+                libraries = with pkgs.python3Packages; [caldav];
+            } (builtins.readFile "${self}/packages/CTO.py");
+            talos = pkgs.writers.writePython3Bin "talos" {
+                libraries = with pkgs.python3Packages; [python-telegram-bot flask apscheduler uvicorn starlette];
+            } (builtins.readFile "${self}/packages/talos.py");
+        };
       };
       flake = {
-        nixosModules.CTO = import "${self}/modules/CTO" self;
+        nixosModules = {
+            CTO = import "${self}/modules/CTO.nix" self;
+            talos = import "${self}/modules/talos.nix" self;
+        };
       };
     };
 }
